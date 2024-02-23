@@ -14,7 +14,9 @@ export const client = Client.create(
 export const getSps = async () => {
   const sps = await client.sp.getStorageProviders();
   const finalSps = (sps ?? []).filter(
-    (v) => v.endpoint == "https://gnfd-sp.4everland.org"
+    (v) =>
+      v.operatorAddress.toLocaleLowerCase() ==
+      process.env.VUE_APP_PROVIDER_STORAGE_ADDR!.toLocaleLowerCase()
   );
   return finalSps;
 };

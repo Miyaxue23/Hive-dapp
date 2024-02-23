@@ -35,7 +35,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isHivePage = /\/\w+\/hive/.test(to.path);
+  const isHivePage = /\/[0-9a-z-]{3,50}\/hive/.test(to.path);
   if (isHivePage) {
     if (localStorage.token && localStorage.address) {
       next();

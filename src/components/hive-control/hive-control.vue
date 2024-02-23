@@ -161,13 +161,14 @@ const handleConfirm = async () => {
     const signer = await provider.getSigner();
     const Hive = Hive__factory.connect(hiveAddr, signer);
     transactionLoading.value = true;
+
+    let tx;
     if (isBuy.value) {
-      const tx = await Hive.buyShares(contractName.value, 1, curPrice);
-      await tx.wait();
+      tx = await Hive.buyShares(contractName.value, 1, curPrice);
     } else {
-      const tx = await Hive.sellShares(contractName.value, 1, curPrice);
-      await tx.wait();
+      tx = await Hive.sellShares(contractName.value, 1, curPrice);
     }
+    await tx.wait();
     transactionLoading.value = false;
     showDialog.value = false;
 
@@ -177,12 +178,15 @@ const handleConfirm = async () => {
     });
     location.reload();
   } catch (error: any) {
-    console.log(error);
+    console.log(error, error.message);
     transactionLoading.value = false;
     let message = error.message;
-    if (/user rejected action/.test(error.message)) {
+    if (/user rejected action/.test(message)) {
       message = "user rejected action";
-    } else if (/Insufficient payment/.test(error.message)) {
+    } else if (
+      /Insufficient payment/.test(message) ||
+      /insufficient funds/i.test(message)
+    ) {
       message = "Insufficient payment";
     }
     ElMessage({
