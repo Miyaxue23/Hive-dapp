@@ -143,6 +143,7 @@ if (window.ethereum) {
 
 const handleConnect = async () => {
   try {
+    if (!showConnect.value) return;
     if (!window.ethereum) return window.open("https://metamask.io/");
     showConnect.value = false;
     await store.dispatch("getCode", { scope: "login" });
